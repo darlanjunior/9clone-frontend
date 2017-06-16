@@ -1,4 +1,5 @@
 import React from 'react'
+import { Loader } from 'semantic-ui-react'
 
 export default class API extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ export default class API extends React.Component {
   render() {
     const { loading, error, response } = this.state
 
-    if(loading) return (<div>Loading bitch</div>);
+    if(loading) return (<Loader active inline="centered" />);
     if(error) return (<div>Oh Noes error</div>);
 
     return React.cloneElement(this.props.children, {
