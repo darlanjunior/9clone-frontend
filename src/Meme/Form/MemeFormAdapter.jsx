@@ -1,5 +1,6 @@
 import React from 'react'
-import MemeForm from '../Web/MemeForm'
+
+import MemeForm from './MemeForm';
 
 export default class MemeFormAdapter extends React.Component {
   state = { title: '', file: null, loading: false, response: {} }

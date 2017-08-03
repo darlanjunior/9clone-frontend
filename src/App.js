@@ -1,5 +1,7 @@
+import { withContext } from 'recompose';
 import React, { Component } from 'react';
-import MemeListPage from './Page/MemeListPage';
+import PropTypes from 'prop-types'
+import MemeListPage from './Meme/MemeListPage';
 
 class App extends Component {
   render() {
@@ -7,4 +9,8 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withContext({
+  urlEndpoint: PropTypes.string
+}, () => { return {
+  urlEndpoint: 'http://localhost:3001'
+}})(App);

@@ -6,8 +6,8 @@ export default ({
   url,
   params = {},
   loadOnMount = true,
-  LoadingComponent,
-  ErrorComponent
+  loadingComponent,
+  errorComponent
 }) => {
   if(!url) throw new Error('URL is required')
 
@@ -41,7 +41,6 @@ export default ({
         this.setState({loading: true})
 
         return api(`${this.urlEndpoint()||''}${url}`, {...aditionalParams, ...params})
-          .then(response => response.json())
           .then(this.setLoadedState.bind(this))
           .catch(this.setErrorState.bind(this))
       }
@@ -50,8 +49,8 @@ export default ({
         const { loading, error } = this.state
         const reload = () => this.fetchData()
 
-        if(loading && !!LoadingComponent) return <LoadingComponent {...this.state} {...{reload}} />
-        if(error && !!ErrorComponent) return <ErrorComponent {...this.state} {...{reload}} />
+        if(loading && !!loadingComponent) return loadingComponent
+        if(error && !!errorComponent) return errorComponent
         return <Component {...this.state} {...{reload}} />
       }
     }

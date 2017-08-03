@@ -1,9 +1,10 @@
 import React from 'react'
-import MemeListAdapter from '../Data/MemeListAdapter'
-import MemeFormAdapter from '../Data/MemeFormAdapter'
-import Menu from '../Web/Menu'
 
-export default class MemeListPage extends React.Component {
+import MemeFormAdapter from './Form/MemeFormAdapter';
+import MemeList from './List/MemeList';
+import Menu from '../Layout/Menu';
+
+class MemeListPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -21,7 +22,9 @@ export default class MemeListPage extends React.Component {
             stopShowing={() => this.setState({showForm: false})}/> :
           null
       }
-      <MemeListAdapter showForm={this.state.showForm}/>
+      <MemeList showForm={this.state.showForm}/>
     </div>
   }
 }
+
+export default MemeListPage

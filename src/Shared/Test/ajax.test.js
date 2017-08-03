@@ -18,8 +18,8 @@ describe('API Higher Order Component', () => {
       url: (error? null : url),
       params: (addParams? params : null),
       loadOnMount,
-      LoadingComponent,
-      ErrorComponent
+      loadingComponent: (<LoadingComponent />),
+      errorComponent: (<ErrorComponent />)
     })
 
     it('returns a function', () => (
@@ -36,7 +36,7 @@ describe('API Higher Order Component', () => {
   describe("calls the api", () => {
     beforeEach(() => {
       const response = { a: 'b' }
-      const promise = new Promise(resolve => resolve({json: () => response}))
+      const promise = new Promise(resolve => resolve(response))
       utils.api = jest.fn().mockImplementation(() => promise)
     })
 
@@ -49,8 +49,8 @@ describe('API Higher Order Component', () => {
       url,
       params,
       loadOnMount,
-      LoadingComponent,
-      ErrorComponent
+      loadingComponent: (<LoadingComponent />),
+      errorComponent: (<ErrorComponent />)
     })(Child)
     const wrapped = shallow(<Component />, { context: { urlEndpoint: 'myendpoint' } })
     const state = wrapped.state()
