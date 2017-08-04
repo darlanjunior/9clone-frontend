@@ -1,39 +1,39 @@
+import {Button, Form as FormTag} from 'semantic-ui-react'
+import { Form as ReactForm } from 'react-form';
 import React from 'react'
-import { Button, Form } from 'semantic-ui-react'
 
-export default class MemeForm extends React.Component {
-  onChange(e) {
-    const name = e.target.name
-    const val = (name === 'file')?
-      e.target.files[0] : e.target.value
+import Input from '../../Shared/Input';
+import ajax from '../../Shared/ajax';
 
-    this.props.updateValue(name, val);
-  }
-
-  onSubmit = (e) => {
-    e.preventDefault();
-    this.props.submit();
-  }
-
+class MemeForm extends React.Component {
   render() {
-    return <Form
-      success
-      warning
-      error
-      loading={this.props.loading}
-      onSubmit={(e) => this.onSubmit(e)}>
-    <Form.Input
-      label='Title'
-      name='title'
-      placeholder='Title'
-      onChange={(e) => this.onChange(e)}/>
-    <Form.Input
-      label='Image'
-      name='file'
-      placeholder='Image'
-      type='file'
-      onChange={(e) => this.onChange(e)}/>
-    <Button type='submit'>Submit</Button>
-  </Form>
+    return (
+      <ReactForm
+        onSubmit={(e) => {
+          this.props.stopShowing()
+          this.props.reload(e, 'post')
+        }}>
+        {({submitForm}) => (
+          <FormTag onSubmit={submitForm}>
+            <Input
+              type='text'
+              label='Title'
+              placeholder='Title'
+              field='title'/>
+            <Input
+              type='file'
+              label='Meme'
+              field='file'
+              placeholder='Image'/>
+            <Button type='submit'>Submit</Button>
+          </FormTag>
+        )}
+      </ReactForm>
+    )
   }
 }
+
+export default ajax({
+  url: '/memes',
+  loadOnMount: false
+})(MemeForm)

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import MemeFormAdapter from './Form/MemeFormAdapter';
+import MemeForm from './Form/MemeForm';
 import MemeList from './List/MemeList';
 import Menu from '../Layout/Menu';
 
@@ -18,7 +18,7 @@ class MemeListPage extends React.Component {
       <Menu onClick={() => this.setState({showForm: true})}/>
       {
         this.state.showForm?
-          <MemeFormAdapter
+          <MemeForm
             stopShowing={() => this.setState({showForm: false})}/> :
           null
       }
