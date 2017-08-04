@@ -30,6 +30,7 @@ class MemeList extends React.Component {
 
   render() {
     const { memes } = this.state;
+    if(memes.length === 0) return <div>Loading...</div>
 
     return (
       <Infinite
