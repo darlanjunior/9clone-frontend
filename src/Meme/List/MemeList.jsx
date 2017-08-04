@@ -1,19 +1,51 @@
 import React from 'react'
-
+import Infinite from 'react-infinite'
 import Meme from './Meme'
-import ajax from '../../Shared/ajax';
+import ajax from '../../Shared/ajax'
 
-const responseToComponent = ({attributes: {url, title}}) => <Meme key={url} {...{url, title}} />
+const responseToComponent = ({id, attributes: {url, title}}) => (
+  <Meme key={id} {...{url, title}} />
+)
 
-const MemeList = props => {
-  const memes = props.response.data;
+class MemeList extends React.Component {
+  state = {
+    memes: [],
+    page: 1
+  }
 
-  return <div>
-    {memes.map(responseToComponent)}
-  </div>
+  componentWillReceiveProps(nextProps) {
+    const { memes } = this.state;
+
+    this.setState({
+      memes: memes.concat(nextProps.response.data)
+    })
+  }
+
+  fetchNextPage() {
+    const {page} = this.state
+    this.props.reload({page: page+1})
+
+    this.setState({page: page+1})
+  }
+
+  render() {
+    const { memes } = this.state;
+
+    return (
+      <Infinite
+        elementHeight={576}
+        infiniteLoadBeginEdgeOffset={300}
+        useWindowAsScrollContainer
+        loadingSpinnerDelegate={<div>Loading...</div>}
+        isInfiniteLoading={this.props.loading}
+        onInfiniteLoad={() => this.fetchNextPage()}>
+        {!!memes? memes.map(responseToComponent) : null}
+      </Infinite>
+    )
+  }
 }
 
 export default ajax({
   url: '/memes',
-  loadingComponent: <div>oie</div>
+  params: {page: 1, items_per_page: 10}
 })(MemeList)

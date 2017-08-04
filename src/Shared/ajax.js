@@ -24,6 +24,12 @@ export default ({
           return this.fetchData()
       }
 
+      shouldComponentUpdate(nextProps, nextState) {
+        if(nextState.loading === this.state.loading) // needed because setState triggers update
+          return false
+        return true
+      }
+
       setLoadedState = json => this.setState({
         loading: false,
         response: json
@@ -40,14 +46,14 @@ export default ({
       fetchData(aditionalParams={}) {
         this.setState({loading: true})
 
-        return api(`${this.urlEndpoint()||''}${url}`, {...aditionalParams, ...params})
+        return api(`${this.urlEndpoint()||''}${url}`, {...params, ...aditionalParams})
           .then(this.setLoadedState.bind(this))
           .catch(this.setErrorState.bind(this))
       }
 
       render() {
         const { loading, error } = this.state
-        const reload = () => this.fetchData()
+        const reload = (p) => this.fetchData(p)
 
         if(loading && !!loadingComponent) return loadingComponent
         if(error && !!errorComponent) return errorComponent

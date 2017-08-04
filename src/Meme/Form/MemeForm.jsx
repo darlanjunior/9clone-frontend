@@ -16,7 +16,6 @@ export default class MemeForm extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return <Form
       success
       warning
