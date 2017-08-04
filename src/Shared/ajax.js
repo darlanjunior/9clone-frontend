@@ -43,21 +43,21 @@ export default ({
 
       urlEndpoint = () => this.context.urlEndpoint
 
-      fetchData(aditionalParams={}) {
+      fetchData(aditionalParams={}, method='get') {
         this.setState({loading: true})
 
-        return api(`${this.urlEndpoint()||''}${url}`, {...params, ...aditionalParams})
+        return api(`${this.urlEndpoint()||''}${url}`, {...params, ...aditionalParams}, method)
           .then(this.setLoadedState.bind(this))
           .catch(this.setErrorState.bind(this))
       }
 
       render() {
         const { loading, error } = this.state
-        const reload = (p) => this.fetchData(p)
+        const reload = (p, m) => this.fetchData(p, m)
 
         if(loading && !!loadingComponent) return loadingComponent
         if(error && !!errorComponent) return errorComponent
-        return <Component {...this.state} {...{reload}} />
+        return <Component {...this.state} {...{reload}} {...this.props} />
       }
     }
     API.contextTypes = {

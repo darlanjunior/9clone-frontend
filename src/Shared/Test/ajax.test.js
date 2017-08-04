@@ -1,6 +1,5 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
-import getElementWithContext from 'react-test-context-provider'
 import PropTypes from 'prop-types'
 
 import ajax from '../ajax';
@@ -73,7 +72,7 @@ describe('API Higher Order Component', () => {
         .instance()
         .componentDidMount()
         .then(_ => {
-          expect(utils.api).toHaveBeenCalledWith("myendpoint/asdf", {"a": "b"})
+          expect(utils.api).toHaveBeenCalledWith("myendpoint/asdf", {"a": "b"}, 'get')
 
           expect(wrapped.state()).toEqual({
             error: false,
