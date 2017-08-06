@@ -54,6 +54,13 @@ const buildURL = (url, params, method) => (
   method === 'get'? `${url}?${queryString.stringify(params)}` : url
 )
 
+const jsonToFormData = json => {
+  const form = new FormData();
+  Object.keys(json).forEach(key => form.append(key, json[key]))
+
+  return form
+}
+
 const api = (url, params={}, method="get", headers={}) =>
   fetch(buildURL(url, params, method), {
     method: method,
@@ -62,7 +69,7 @@ const api = (url, params={}, method="get", headers={}) =>
       ...headers
     },
     mode: 'cors',
-    body: ['get', 'head'].includes(method)? null : params
+    body: ['get', 'head'].includes(method)? null : jsonToFormData(params)
   })
   .then(handleHttpErrorCodes)
   .then(persistAuthorizationHeaders)
