@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { api } from './api';
+import _ from 'lodash';
 
 export default ({
   url,
@@ -25,21 +26,27 @@ export default ({
       }
 
       shouldComponentUpdate(nextProps, nextState) {
-        if(nextState.loading === this.state.loading) // needed because setState triggers update
-          return false
-        return true
+        return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state)
       }
 
-      setLoadedState = json => this.setState({
-        loading: false,
-        response: json
-      })
+      setLoadedState = json => {
+        this.setState({
+          loading: false,
+          response: json
+        })
 
-      setErrorState = error => this.setState({
-        loading: false,
-        error: true,
-        response: error
-      })
+        return json
+      }
+
+      setErrorState = error => {
+        this.setState({
+          loading: false,
+          error: true,
+          response: error
+        })
+
+        return error.response
+      }
 
       urlEndpoint = () => this.context.urlEndpoint
 
