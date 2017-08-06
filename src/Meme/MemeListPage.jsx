@@ -9,20 +9,24 @@ class MemeListPage extends React.Component {
     super(props);
 
     this.state = {
-      showForm: false
+      showForm: false,
+      lastCreated: 0
     }
   }
 
   render() {
+    const {showForm, lastCreated} = this.state
+
     return <div>
       <Menu onClick={() => this.setState({showForm: true})}/>
       {
-        this.state.showForm?
-          <MemeForm
-            stopShowing={() => this.setState({showForm: false})}/> :
-          null
+        showForm? <MemeForm
+            finishCreating={() => this.setState({
+              showForm: false,
+              lastCreated: lastCreated+1
+            })} /> : null
       }
-      <MemeList showForm={this.state.showForm}/>
+      <MemeList lastCreated={lastCreated} />
     </div>
   }
 }

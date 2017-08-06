@@ -10,22 +10,36 @@ const responseToComponent = ({id, attributes: {url, title}}) => (
 class MemeList extends React.Component {
   state = {
     memes: [],
-    page: 1
+    page: 1,
+    created: false
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { memes } = this.state;
+  componentWillReceiveProps({lastCreated, response: {data}}) {
+    console.log(lastCreated, this.props.lastCreated)
+    if(lastCreated > this.props.lastCreated) {
+      this.setState({created: true})
+      this.fetchPage(1, 1)
+      return;
+    }
+
+    const { memes, created } = this.state;
 
     this.setState({
-      memes: memes.concat(nextProps.response.data)
+      memes: created? memes.concat(data) : data.concat(memes),
+      created: false
     })
+  }
+
+  fetchPage(page, items_per_page=null) {
+    this.props.reload({page, items_per_page})
   }
 
   fetchNextPage() {
     const {page} = this.state
-    this.props.reload({page: page+1})
+    const nextPage = page+1
 
-    this.setState({page: page+1})
+    this.setState({page: nextPage})
+    this.fetchPage(nextPage)
   }
 
   render() {
