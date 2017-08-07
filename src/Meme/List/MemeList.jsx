@@ -1,5 +1,8 @@
-import React from 'react'
+import { Loader } from 'semantic-ui-react';
 import Infinite from 'react-infinite'
+import React from 'react'
+import _ from 'lodash'
+
 import Meme from './Meme'
 import ajax from '../../Shared/ajax'
 
@@ -14,24 +17,23 @@ class MemeList extends React.Component {
     created: false
   }
 
-  componentWillReceiveProps({lastCreated, response: {data}}) {
-    console.log(lastCreated, this.props.lastCreated)
+  componentWillReceiveProps({lastCreated, response: {data}, ...props}) {
     if(lastCreated > this.props.lastCreated) {
-      this.setState({created: true})
       this.fetchPage(1, 1)
-      return;
+      return this.setState({created: true});
     }
+    if(!data) return
 
     const { memes, created } = this.state;
 
-    this.setState({
-      memes: created? memes.concat(data) : data.concat(memes),
+    return this.setState({
+      memes: created? _.unionBy(data, memes, 'id') : _.unionBy(memes, data, 'id'),
       created: false
     })
   }
 
-  fetchPage(page, items_per_page=null) {
-    this.props.reload({page, items_per_page})
+  fetchPage(page, items_per_page=10) {
+    return this.props.reload({page, items_per_page})
   }
 
   fetchNextPage() {
@@ -39,19 +41,23 @@ class MemeList extends React.Component {
     const nextPage = page+1
 
     this.setState({page: nextPage})
-    this.fetchPage(nextPage)
+    return this.fetchPage(nextPage)
+  }
+
+  loading() {
+    return <Loader active>Loading</Loader>
   }
 
   render() {
     const { memes } = this.state;
-    if(memes.length === 0) return <div>Loading...</div>
+    if(memes.length === 0) return <div>No records found</div>
 
     return (
       <Infinite
         elementHeight={576}
         infiniteLoadBeginEdgeOffset={300}
         useWindowAsScrollContainer
-        loadingSpinnerDelegate={<div>Loading...</div>}
+        loadingSpinnerDelegate={this.loading()}
         isInfiniteLoading={this.props.loading}
         onInfiniteLoad={() => this.fetchNextPage()}>
         {!!memes? memes.map(responseToComponent) : null}
@@ -60,6 +66,7 @@ class MemeList extends React.Component {
   }
 }
 
+export { MemeList }
 export default ajax({
   url: '/memes',
   params: {page: 1, items_per_page: 10}
