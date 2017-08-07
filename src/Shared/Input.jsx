@@ -11,7 +11,7 @@ export default ({field, ...props}) => (
     {({ setValue, getValue, setTouched }) => (
       <Input
         {...props}
-        value={props.type === 'file' ? undefined : getValue()}
+        value={props.type === 'file' ? undefined : getValue('')}
         onChange={(e) => setValue(value(e))}
         onBlur={() => setTouched()} />
     )}
