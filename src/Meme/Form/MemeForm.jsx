@@ -6,18 +6,31 @@ import Input from '../../Shared/Input';
 import ajax from '../../Shared/ajax';
 
 class MemeForm extends React.Component {
+  reloadList(meme) {
+    const {reload, finishCreating} = this.props;
+
+    return reload(meme, 'post')
+      .then(({success, errors}) => {
+        if(!success) throw new Error(errors)
+        finishCreating(meme)
+      })
+      .catch(errors => console.log(errors))
+  }
+
+  validate(params) {
+    return {
+      title: !params.title? 'Required' : undefined,
+      file: !params.file? 'Required' : undefined
+    }
+  }
+
   render() {
+    const {validate, reloadList} = this
+
     return (
       <ReactForm
-        onSubmit={(meme) => {
-          const {reload, finishCreating} = this.props;
-          reload(meme, 'post')
-            .then(({success, errors}) => {
-              if(!success) throw new Error(errors)
-              finishCreating(meme)
-            })
-            .catch(errors => console.log(errors))
-        }}>
+        onSubmit={reloadList.bind(this)}
+        validate={validate}>
         {({submitForm, errors}) => (
           <FormTag onSubmit={submitForm}>
             <Input
@@ -44,12 +57,3 @@ export default ajax({
   url: '/memes',
   loadOnMount: false
 })(MemeForm)
-
-
-/*
-validate={({title, file}) => {
-  return {
-    title: !title? 'Required' : undefined,
-    file: !file? 'Required' : undefined
-  }
-}}*/
