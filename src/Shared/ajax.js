@@ -17,11 +17,13 @@ export default ({
       state = {
         loading: loadOnMount,
         error: false,
-        response: {}
+        response: {},
+        manualTrigger: false
       }
 
       componentDidMount() {
-        if(loadOnMount)
+        // prevent loadOnMount + manualTrigger => double fetch
+        if(loadOnMount && !this.state.manualTrigger)
           return this.fetchData()
       }
 
@@ -32,7 +34,8 @@ export default ({
       setLoadedState = json => {
         this.setState({
           loading: false,
-          response: json
+          response: json,
+          manualTrigger: false
         })
 
         return json
@@ -42,7 +45,8 @@ export default ({
         this.setState({
           loading: false,
           error: true,
-          response: error
+          response: error,
+          manualTrigger: false
         })
 
         return error.response
@@ -60,11 +64,17 @@ export default ({
 
       render() {
         const { loading, error } = this.state
-        const reload = (p, m) => this.fetchData(p, m)
+        const reload = (p, m) => {
+          this.setState({manualTrigger: true})
+          return this.fetchData(p, m)
+        }
 
         if(loading && !!loadingComponent) return loadingComponent
         if(error && !!errorComponent) return errorComponent
-        return <Component {...this.state} {...{reload}} {...this.props} />
+        return <Component
+          {..._.omit(this.state, ['manualTrigger']) }
+          {...{reload}}
+          {...this.props} />
       }
     }
     API.contextTypes = {

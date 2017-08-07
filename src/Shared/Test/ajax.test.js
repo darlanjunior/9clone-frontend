@@ -74,7 +74,7 @@ describe('API Higher Order Component', () => {
         .then(_ => {
           expect(utils.api).toHaveBeenCalledWith("myendpoint/asdf", {"a": "b"}, 'get')
 
-          expect(wrapped.state()).toEqual({
+          expect(wrapped.state()).toMatchObject({
             error: false,
             loading: false,
             response: {a: 'b'}
