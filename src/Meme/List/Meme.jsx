@@ -1,10 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Card, Image } from 'semantic-ui-react'
 
-export default ({url, title}) => (
+const Meme = ({url, title}, {urlEndpoint}) => (
   <div style={{maxWidth: '600px', margin: 'auto', marginBottom: '20px'}}>
     <Card centered fluid>
-      <Image centered height='500px' src={`http://localhost:3001/${url}`} />
+      <Image centered height='500px' src={`${urlEndpoint}/${url}`} />
       <Card.Content>
         <Card.Header>
           {title}
@@ -13,3 +14,9 @@ export default ({url, title}) => (
     </Card>
   </div>
 )
+
+Meme.contextTypes = {
+  urlEndpoint: PropTypes.string
+};
+
+export default Meme;
