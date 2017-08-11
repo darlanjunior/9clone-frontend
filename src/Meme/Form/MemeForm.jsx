@@ -14,7 +14,7 @@ class MemeForm extends React.Component {
         if(!success) throw new Error(errors)
         finishCreating(meme)
       })
-      .catch(errors => console.log(errors))
+      .catch(errors => alert(errors))
   }
 
   validate(params) {
