@@ -1,32 +1,50 @@
-import { Icon, Item, Menu } from 'semantic-ui-react';
+import { Icon, Image, Item, Menu as SemanticMenu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import React from 'react'
+import React from 'react';
 
-export default class MemeListPage extends React.Component {
-  render = () => (
-    <Menu>
-      <Item name='home'>
-       <Link to="/"><Icon name='home' />
-       Memes</Link>
-      </Item>
+import PropTypes from 'prop-types'
 
-      <Menu.Menu position='right'>
+const UnsignedMenu = () => (
+  <SemanticMenu.Menu position='right'>
+    <Item name='home'>
+      <Link to="/login">
+        <Icon name='sign in' />
+        Login
+      </Link>
+    </Item>
 
-        <Item name='home'>
-          <Link to="/login">
-            <Icon name='sign in' />
-            Login
-          </Link>
-        </Item>
+    <Item>
+      <Link to="/register">
+        <Icon name='add user' />
+        Register
+      </Link>
+    </Item>
+  </SemanticMenu.Menu>
+)
 
-        <Item>
-          <Link to="/register">
-            <Icon name='add user' />
-            Register
-          </Link>
-        </Item>
+const SignedMenu = ({name, picture, role, urlEndpoint}) => (
+  <SemanticMenu.Menu position='right'>
+    <Item>
+      <Image avatar src={urlEndpoint+picture} />
+      {name} - {role}
+    </Item>
+  </SemanticMenu.Menu>
+)
 
-      </Menu.Menu>
-    </Menu>
-  )
+const Menu = (props, {currentUser: {name, picture, role}, urlEndpoint}) => (
+  <SemanticMenu>
+    <Item name='home'>
+      <Link to="/">
+        <Icon name='home' />
+        Memes
+      </Link>
+    </Item>
+    {!!name? <SignedMenu {...{name, picture, role, urlEndpoint}} /> : <UnsignedMenu /> }
+  </SemanticMenu>
+)
+
+Menu.contextTypes = {
+  currentUser: PropTypes.object,
+  urlEndpoint: PropTypes.string
 }
+export default Menu
