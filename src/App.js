@@ -1,7 +1,7 @@
 import { BrowserRouter, Route } from 'react-router-dom';
 import React, { Component } from 'react';
-import cookie from 'react-cookies'
 import _ from 'lodash'
+import cookie from 'react-cookies'
 
 import PropTypes from 'prop-types'
 
@@ -11,6 +11,7 @@ import MemeListPage from './Meme/MemeListPage';
 import Menu from './Layout/Menu';
 import RegisterPage from './User/RegisterPage';
 import UpdatePasswordPage from './User/UpdatePasswordPage';
+import UserListPage from './User/Users/UserListPage';
 import ajax from './Shared/ajax';
 
 const urlEndpoint = 'http://localhost:3001'
@@ -44,6 +45,7 @@ class App extends Component {
         <div>
           <Menu />
           <Route exact path="/" component={MemeListPage} />
+          <Route exact path="/users" component={UserListPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/password" component={UpdatePasswordPage} />

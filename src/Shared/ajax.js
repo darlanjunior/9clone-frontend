@@ -54,19 +54,20 @@ export default ({
 
       urlEndpoint = () => this.context.urlEndpoint
 
-      fetchData(aditionalParams={}, method='get') {
+      fetchData(aditionalParams={}, method='get', path='') {
+        console.log(path)
         this.setState({loading: true})
 
-        return api(`${this.urlEndpoint()||''}${url}`, {...params, ...aditionalParams}, method)
+        return api(`${this.urlEndpoint()||''}${url}${path}`, {...params, ...aditionalParams}, method)
           .then(this.setLoadedState.bind(this))
           .catch(this.setErrorState.bind(this))
       }
 
       render() {
         const { loading, error } = this.state
-        const reload = (p, m) => {
+        const reload = (params, method, path) => {
           this.setState({manualTrigger: true})
-          return this.fetchData(p, m)
+          return this.fetchData(params, method, path)
         }
 
         if(loading && !!loadingComponent) return loadingComponent
