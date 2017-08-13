@@ -1,13 +1,24 @@
-import { Header, Icon, Image, Table } from 'semantic-ui-react';
+import { Button, Header, Icon, Image, Table } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import React from 'react';
+
 import PropTypes from 'prop-types'
+
 import RemoveButton from './RemoveButton'
 
 const avatar = (picture, urlEndpoint) => !!picture? (
   <Image src={urlEndpoint+picture} shape='rounded' size='mini' />
 ) : <Icon name="user circle" />
 
-const User = ({id, picture, name, email, role, callback}, {urlEndpoint}) => (
+const User = ({
+  id,
+  picture,
+  name,
+  email,
+  role,
+  callback,
+  history
+}, {urlEndpoint}) => (
   <Table.Row>
     <Table.Cell>
       <Header as='h4' image>
@@ -22,10 +33,14 @@ const User = ({id, picture, name, email, role, callback}, {urlEndpoint}) => (
       {role}
     </Table.Cell>
     <Table.Cell>
-      <Icon name='content'/>
+      <Link to={`/users/${id}/memes`}>
+        <Button icon='content' />
+      </Link>
     </Table.Cell>
     <Table.Cell>
-      <Icon name='edit'/>
+      <Link to={`/users/${id}`}>
+        <Button icon='edit'/>
+      </Link>
     </Table.Cell>
     <Table.Cell>
       <RemoveButton id={id} callback={callback}/>
